@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>웹제작 과제</title>
+	<link rel="stylesheet" type="text/css" href="css.css">
+	<script type="text/javascript">
+		function addLoadEvent(func){
+			var oldonLoad=window.onload;
+		if(typeof window.onload!='function'){
+			window.onload=func;
+		}
+		else{
+			window.onload=function(){
+			oldonLoad();
+			func();
+			}
+		}
+	}
+	function getElementsByClassName(clsName,parentNode) {
+ 		var arr=new Array();
+		if(parentNode==null){
+ 		var elems=document.getElementsByTagName("*");
+		}
+		else{
+ 		var elems=parentNode.getElementsByTagName("*");
+		}
+ 		for(var cls,i=0;(elem=elems[i]);i++){
+			if(elem.className==clsName){
+		   arr[arr.length]=elem;
+ 			}
+ 		}
+		 return arr;
+	}
+	addLoadEvent(game);
+	function game(){
+		if(!document.getElementById("game"))return false;
+		if(!document.getElementById("game").getElementsByTagName("img"))return false;
+		var box=document.getElementById("game");
+		var cards_el=box.getElementsByTagName("img");
+		var cards=new Array();
+		for(i=0;i<cards_el.length-1;i++){
+			var a_el=document.createElement("a");
+			a_el.href="#";
+			var temp=cards_el[i+1].cloneNode(true);
+			temp.className="front";
+			temp.alt=i+"번째 카드 앞면";
+			a_el.appendChild(temp);
+			temp=cards_el[0].cloneNode(true);
+			temp.className="back";
+			temp.alt="카드 뒷면";
+			a_el.appendChild(temp);
+			var a_el2=a_el.cloneNode(true);
+			cards[i]=a_el;
+			cards[i+cards_el.length-1]=a_el2;
+		}
+		var randomCards=new Array();
+		var div_el=document.createElement("div");
+		div_el.count=0;
+		div_el.totalcount=0;
+		div_el.selectCards=new Array();
+		div_el.className="box";
+		for(i=0;i<cards.length;i++){
+			randomCards[i]=Math.floor(Math.random(1)*cards.length);
+			for(j=0;j<i;j++){
+				if(randomCards[j]==randomCards[i])i--;
+			}
+			div_el.appendChild(cards[randomCards[i]]);
+			cards[randomCards[i]]._id=i;
+			cards[randomCards[i]]._false=false;
+			cards[randomCards[i]].onclick=function(){
+				if(this._false == true)return false;
+				this.parentNode.selectCards[this.parentNode.count]=this._id;
+				if(this.parentNode.count>1){
+					this.parentNode.count=0;
+					var cardA=this.parentNode.childNodes[this.parentNode.selectCards[0]]._id;
+					var cardB=this.parentNode.childNodes[this.parentNode.selectCards[1]]._id;
+					cardA=this.parentNode.childNodes[cardA].childNodes[0].alt;
+					cardB=this.parentNode.childNodes[cardB].childNodes[0].alt;
+					if(cardA!=cardB){
+						for(i=0;i<2;i++){
+							this.parentNode.childNodes[this.parentNode.selectCards[i]].childNodes[1].className="block";
+							this.parentNode.childNodes[this.parentNode.selectCards[i]]._false=false;
+						}
+							this.parentNode.count=0;
+					}
+					if(cardA==cardB){
+						for(i=0;i<2;i++){
+							this.parentNode.childNodes[this.parentNode.selectCards[i]].onclick=function () {
+								return false;
+							}
+							this.parentNode.childNodes[this.parentNode.selectCards[i]].className="selected";
+						}
+					}
+					this.parentNode.selectCards[this.parentNode.count]=this._id;
+				}
+				this.childNodes[1].className ="hidden";
+				this.parentNode.count++;
+				this._false=true;
+				this.parentNode.totalcount++;
+				return false;
+			}
+		}
+		var p_el=document.createElement("p");
+		div_el.appendChild(p_el);
+		box.appendChild(div_el);	
+	}
+	</script>
+</head>
+	<p id="g">메이플스토리 카드맞추기</p>
+	<p>같은 카드를 찾으시오</p>
+	<div id="game">
+		<img alt="카드" width="110" height="185" src="img/s.png">
+		<img alt="카드" width="110" height="185" src="img/p.jpg">
+		<img alt="카드" width="110" height="185" src="img/bb.png">
+		<img alt="카드" width="110" height="185" src="img/gb.png">
+		<img alt="카드" width="110" height="185" src="img/l.jpg">
+		<img alt="카드" width="110" height="185" src="img/m.jpg">
+		<img alt="카드" width="110" height="185" src="img/pb.png">
+		<img alt="카드" width="110" height="185" src="img/s.jpg">
+		<img alt="카드" width="110" height="185" src="img/zb.png">
+	<div id="box">
+	</div>
+	</div>
+</body>
+</html>
